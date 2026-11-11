@@ -1,0 +1,43 @@
+services:
+  backend:
+    image: storex-backend:v3
+    container_name: storex-backend
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+    environment:
+      - DB_HOST=postgres
+      - DB_NAME=${POSTGRES_DB}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASS=${POSTGRES_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - storex-net
+    restart: on-failure
+
+  postgres:
+    image: postgres:13
+    container_name: storex-postgres
+    # Không còn "ports": DB chỉ truy cập được từ trong storex-net
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - storex-net
+
+networks:
+  storex-net:
+    name: storex-net
+    driver: bridge
+
+volumes:
+  postgres_data:
