@@ -1,0 +1,13 @@
+EXERCISE 04 - 2 cho PHAI tu sua trong docker-compose.yml truoc khi chay:
+
+1. REPO_URL: doi <github-username> thanh username GitHub that cua ban.
+   VD: https://github.com/taitbt3124/restaurant-service
+
+2. ACCESS_TOKEN lay tu bien RUNNER_TOKEN. Truoc khi chay:
+   export RUNNER_TOKEN=ghp_xxxxxxxxxxxx   (Personal Access Token, quyen 'repo')
+   roi: docker compose up -d
+
+Nhan (label) runner la 'quickbite-restaurant', da khop voi runs-on trong ci.yml:
+   runs-on: [self-hosted, quickbite-restaurant]
+
+Kiem chung: repo > Settings > Actions > Runners phai thay runner trang thai Idle.
